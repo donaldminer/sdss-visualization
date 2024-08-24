@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Galaxy/Quasar RedShift</title>
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+</head>
+<body style="background: black">
+<script>
+    const margin = {top: 50, right: 30, bottom: 20, left: 70},
+        width = 800 - margin.left - margin.right,
+        height = 760 - margin.top - margin.bottom,
+        radius = Math.min(width, height) / 2 - 30;
+    const svg = d3.select("body")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.bottom + margin.top)
+        .append("g")
+        .attr("transform", `translate(${width/2}, ${height/2})`);
+
+    d3.csv("redshift_info.csv").then(function (data){
+        var r = d3.scaleLinear()
+            .domain([
+                0,
+                d3.max(data, d => +d.redshift)
+            ])
+            .range([0,radius]);
+
+        var gr = svg.append("g")
+            .attr("class", "r axis")
+            .selectAll("g")
+            .data(r.ticks(7).slice(1))
+            .enter().append("g")
+            .attr("stroke", "white");
+
+        gr.append("circle")
+            .attr("r", r)
+            .attr("stroke", "white");
+
+        gr.append("text")
+            .attr("y", function(d) { return -r(d) - 4; })
+            .attr("transform", "rotate(15)")
+            .style("text-anchor", "middle")
+            .text(function(d) { return d; });
+
+        var ga = svg.append("g")
+            .attr("class", "a axis")
+            .selectAll("g")
+            .data(d3.range(0, 360, 30))
+            .enter().append("g")
+            .attr("transform", function(d) {
+                return "rotate(" + -d + ")";
+            })
+            .attr("stroke", "white");
+
+        ga.append("line")
+            .attr("x2", radius)
+            .attr("opacity", 0.6);
+
+
+        ga.append("text")
+            .attr("x", radius + 6)
+            .attr("dy", ".35em")
+            .style("text-anchor", function(d) { return d < 270 && d > 90 ? "end" : null; })
+            .attr("transform", function(d) { return d < 270 && d > 90 ? "rotate(180 " + (radius + 6) + ",0)" : null; })
+            .text(function(d) { return d + "°"; });
+
+        var line = d3.lineRadial()
+            .radius(function(d) {
+                return r(d[1]);
+            })
+            .angle(function(d) {
+                return -d[0] + Math.PI / 2;
+            });
+        const colorScale = d3.scaleOrdinal()
+            .domain(d3.map(data, d => d.class))
+            .range(d3.schemeSet2);
+
+        svg.selectAll("circle")
+            .data(data)
+            .join("circle")
+            .attr("transform", function(d) {
+                if(d.class != "STAR"){
+                    let an = +d.alpha;
+                    let ra = r(+d.redshift);
+                    x = ra * Math.cos(an * Math.PI / 180),
+                        y = ra * Math.sin(an * Math.PI/180);
+                    return "translate(" + [x,y] +")";
+                }
+            })
+            .attr("r", .3)
+            .attr("fill", d => colorScale(d.class));
+    });
+</script>
+
+</body>
+</html>

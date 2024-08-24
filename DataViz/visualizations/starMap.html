@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Star Map</title>
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <link href="star_map.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<script>
+    d3.json("stellarObj.json").then(function(data){
+        const width = 700, height = 700;
+
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var projection = d3.geoStereographic()
+        .scale(.75 * height/Math.PI)
+        .translate([width/2, height/2])
+        .clipAngle(120);
+
+        var path = d3.geoPath()
+            .projection(projection)
+            .pointRadius(0.4);
+
+        svg.append('path')
+            .datum({type: 'Sphere'})
+            .attr('class', 'cellestial-globe')
+            .attr('d', path);
+
+        var graticule = d3.geoGraticule();
+
+        svg.selectAll('path.graticule')
+            .data([graticule()])
+            .enter().append('path')
+            .attr('class', 'graticule-black')
+            .attr('d', path);
+
+        svg.selectAll('path.star')
+            .data(data.features)
+            .enter().append('path')
+            .attr('class', 'star')
+            .attr('d', path);
+    });
+</script>
+</body>
+</html>
