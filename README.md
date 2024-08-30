@@ -12,12 +12,15 @@
 # Filters
 SDSS uses five filters to take in measurements of Ultraviolet, Green, Red, Near-Infrared, and Infrared light that is given off by a stellar object
 The SDSS has adopted a modified form of the Petrosian (1976) system due to the difficulty in measuring flux in galaxies since they do not all have the same radial surface brightness profile and have no consistently distinct edges.
+![Filters](2022-05-08_19-49.png)
 
 # RedShifting in Quasars and Galaxies
 ## What is RedShifting?
 Redshifting occurs when we observe an object moving away from us and the wavelengths of light stretch shifting the spectrum towards the red end of the light spectrum. These values range from 0-7 from the survey
 What is Right Ascention Angle?
 Right ascension, in astronomy, the east–west coordinate by which the position of a celestial body is ordinarily measured (much like longitude); more precisely, it is the angular distance of a body's hour circle east of the vernal equinox, measured along the celestial equator.
+![Redshift](https://github.com/donaldminer/sdss-visualization/blob/main/RedFinal.png)
 
 # Interactive Map
- A limited view of the SDSS dataset, users can drag and move globe to see where each object was scanned in the sky
+ A limited view of the SDSS dataset, users can drag and move globe to see where each object was scanned in the sky.
+ ![SkyMap](SkyMapFinal.png)
